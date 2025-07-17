@@ -6,181 +6,129 @@
   <title>Administração de Medicamentos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    body { background-color: #f0f9ff; font-family: sans-serif; padding: 20px; }
-    header { background-color: #3a8ee6; color: white; padding: 15px; text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; }
-    .btn-primary { background-color: #d9534f; border-color: #d9534f; }
-    .btn-primary:hover { background-color: #c9302c; }
-    .grid-table { margin-top: 20px; }
-    th, td { text-align: center; vertical-align: middle; font-size: 0.9rem; }
-    .modal-title { font-weight: bold; }
-    .checked { background-color: #d4edda !important; }
+    body { 
+      background-color: #f0f9ff; 
+      font-family: sans-serif; 
+      padding: 20px; 
+    }
+    header { 
+      background-color: #3a8ee6; 
+      color: white; 
+      padding: 15px; 
+      text-align: center; 
+      font-size: 1.5rem; 
+      font-weight: bold; 
+      margin-bottom: 20px; 
+      border-radius: 8px;
+    }
+    .btn-primary { 
+      background-color: #d9534f; 
+      border-color: #d9534f; 
+    }
+    .btn-primary:hover { 
+      background-color: #c9302c; 
+    }
+    .grid-table { 
+      margin-top: 20px; 
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td { 
+      text-align: center; 
+      vertical-align: middle; 
+      font-size: 0.9rem; 
+      padding: 12px 8px;
+    }
+    th {
+      background-color: #3a8ee6;
+      color: white;
+    }
+    .modal-title { 
+      font-weight: bold; 
+    }
+    .checked { 
+      background-color: #d4edda !important; 
+    }
+    .btn-success {
+      background-color: #28a745;
+    }
+    .btn-outline-success {
+      color: #28a745;
+      border-color: #28a745;
+    }
   </style>
 </head>
 <body>
   <header>Administração de Medicamentos</header>
 
   <div class="d-flex justify-content-between mb-3">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#medModal">Adicionar Medicamento</button>
-    <button class="btn btn-secondary" id="removerBtn">Remover Medicamento</button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#medModal">
+      <i class="bi bi-plus-circle"></i> Adicionar Medicamento
+    </button>
+    <button class="btn btn-secondary" id="removerBtn">
+      <i class="bi bi-trash"></i> Remover Medicamento
+    </button>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-bordered grid-table" id="medTable">
-      <thead><tr id="tableHead"><th>Medicamento</th></tr></thead>
-      <tbody id="tableBody"></tbody>
+  <div class="table-responsive grid-table">
+    <table class="table table-bordered" id="medTable">
+      <thead>
+        <tr id="tableHead">
+          <th>Medicamento</th>
+          <!-- Horários serão gerados dinamicamente pelo JavaScript -->
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Conteúdo será gerado dinamicamente pelo JavaScript -->
+      </tbody>
     </table>
   </div>
 
   <!-- Modal para adicionar medicamento -->
   <div class="modal fade" id="medModal" tabindex="-1" aria-labelledby="medModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <form id="addMedForm" class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="medModalLabel">Adicionar Medicamento</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="nomeMed" class="form-label">Nome do Medicamento</label>
-            <input type="text" class="form-control" id="nomeMed" required>
+      <div class="modal-content">
+        <form id="addMedForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="medModalLabel">Adicionar Medicamento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
           </div>
-          <div class="mb-3">
-            <label for="intervalo" class="form-label">Intervalo</label>
-            <select class="form-select" id="intervalo" required>
-              <option value="1">1/1 hora (24x dia)</option>
-              <option value="2">2/2 horas (12x dia)</option>
-              <option value="3">3/3 horas (8x dia)</option>
-              <option value="4">4/4 horas (6x dia)</option>
-              <option value="6">6/6 horas (4x dia)</option>
-              <option value="8">8/8 horas (3x dia)</option>
-              <option value="12">12/12 horas (2x dia)</option>
-              <option value="24">24/24 horas (1x dia)</option>
-            </select>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="nomeMed" class="form-label">Nome do Medicamento</label>
+              <input type="text" class="form-control" id="nomeMed" required>
+            </div>
+            <div class="mb-3">
+              <label for="intervalo" class="form-label">Intervalo de Administração</label>
+              <select class="form-select" id="intervalo" required>
+                <option value="1">1/1 hora (24x dia)</option>
+                <option value="2">2/2 horas (12x dia)</option>
+                <option value="3">3/3 horas (8x dia)</option>
+                <option value="4">4/4 horas (6x dia)</option>
+                <option value="6" selected>6/6 horas (4x dia)</option>
+                <option value="8">8/8 horas (3x dia)</option>
+                <option value="12">12/12 horas (2x dia)</option>
+                <option value="24">24/24 horas (1x dia)</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer"><button type="submit" class="btn btn-primary">Salvar</button></div>
-      </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Medicamento</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
-  <script type="module">
-    import { database } from './firebase-config.js';
-    import { ref, set, push, remove, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const atendimento = urlParams.get("atendimento");
-    const tableHead = document.getElementById("tableHead");
-    const tableBody = document.getElementById("tableBody");
-    const form = document.getElementById("addMedForm");
-    const removerBtn = document.getElementById("removerBtn");
-
-    let horas = [];
-
-    function gerarCabecalho() {
-      const now = new Date();
-      horas = [];
-      for (let i = 0; i < 24; i++) {
-        const hora = new Date(now.getTime() + i * 60 * 60 * 1000).getHours().toString().padStart(2, '0') + ":00";
-        horas.push(hora);
-      }
-      for (const h of horas) {
-        const th = document.createElement("th");
-        th.textContent = h;
-        tableHead.appendChild(th);
-      }
-    }
-
-    function carregarMedicamentos() {
-      tableBody.innerHTML = "";
-      get(child(ref(database), `medicamentos/${atendimento}`)).then(snapshot => {
-        if (snapshot.exists()) {
-          const dados = snapshot.val();
-          Object.entries(dados).forEach(([key, med]) => {
-            const tr = document.createElement("tr");
-            tr.setAttribute("data-key", key);
-            tr.innerHTML = `<td>${med.nome}</td>` + horas.map((hora, i) => {
-              if (i % parseInt(med.intervalo) === 0) {
-                return `<td><button class="btn btn-sm btn-outline-success" 
-                            data-nome="${med.nome}" data-hora="${hora}" data-key="${key}">
-                          ✔</button></td>`;
-              } else {
-                return `<td></td>`;
-              }
-            }).join("");
-            tr.addEventListener("click", () => tr.classList.toggle("table-danger"));
-            tableBody.appendChild(tr);
-          });
-        }
-      });
-    }
-
-    tableBody.addEventListener("click", async function (event) {
-      const btn = event.target.closest("button");
-      if (!btn || !btn.dataset.nome) return;
-
-      const nome = btn.dataset.nome;
-      const hora = btn.dataset.hora;
-      const key = btn.dataset.key;
-
-      if (btn.classList.contains("checked")) {
-        const confirmar = confirm("Deseja reverter esta administração?");
-        if (confirmar) {
-          const historicoId = btn.getAttribute("data-historico-id");
-          if (historicoId) {
-            await remove(ref(database, `historico/${atendimento}/${historicoId}`));
-          }
-          btn.disabled = false;
-          btn.classList.remove("btn-success", "checked");
-          btn.removeAttribute("data-registrado");
-          btn.removeAttribute("data-historico-id");
-          btn.innerText = "✔";
-        }
-      } else {
-        const confirmar = confirm(`Confirmar administração de "${nome}" às ${hora}?`);
-        if (confirmar) {
-          const dataAtual = new Date().toISOString().split('T')[0];
-          const timestamp = new Date().toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' });
-
-          const historicoRef = push(ref(database, `historico/${atendimento}`));
-          await set(historicoRef, {
-            medicamento: nome,
-            horarioPrevisto: hora,
-            horarioReal: timestamp,
-            data: dataAtual
-          });
-
-          btn.disabled = true;
-          btn.classList.add("btn-success", "checked");
-          btn.setAttribute("data-registrado", "true");
-          btn.setAttribute("data-historico-id", historicoRef.key);
-          btn.innerText = "✔";
-        }
-      }
-    });
-
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const nome = document.getElementById("nomeMed").value;
-      const intervalo = document.getElementById("intervalo").value;
-      const medRef = push(ref(database, `medicamentos/${atendimento}`));
-      set(medRef, { nome, intervalo }).then(() => {
-        form.reset();
-        bootstrap.Modal.getInstance(document.getElementById("medModal")).hide();
-        carregarMedicamentos();
-      });
-    });
-
-    removerBtn.addEventListener("click", () => {
-      document.querySelectorAll("#tableBody tr.table-danger").forEach(tr => {
-        const key = tr.getAttribute("data-key");
-        remove(ref(database, `medicamentos/${atendimento}/${key}`)).then(() => tr.remove());
-      });
-    });
-
-    gerarCabecalho();
-    carregarMedicamentos();
-  </script>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="module" src="./scripts/medicacao-script.js"></script>
+  
+  <!-- Nosso script principal -->
+  <script type="module" src="medicacao-script.js"></script>
 </body>
 </html>

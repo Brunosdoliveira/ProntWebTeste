@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
@@ -8,12 +7,31 @@
   <style>
     body { background-color: #f9fbff; font-family: sans-serif; padding: 20px; }
     header { background-color: #3a8ee6; color: white; padding: 15px; text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; }
+    .filtros { background-color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
     table { background-color: white; }
     th, td { text-align: center; vertical-align: middle; font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <header>Histórico de Administração</header>
+
+  <div class="filtros">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="filtroMedicamento" class="form-label">Medicamento</label>
+        <select class="form-select" id="filtroMedicamento">
+          <option value="">Todos os medicamentos</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="filtroData" class="form-label">Data</label>
+        <input type="date" class="form-control" id="filtroData">
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button id="aplicarFiltros" class="btn btn-primary w-100">Aplicar</button>
+      </div>
+    </div>
+  </div>
 
   <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -31,41 +49,85 @@
 
   <script type="module">
     import { database } from './firebase-config.js';
-    import { ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    import { ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
     const urlParams = new URLSearchParams(window.location.search);
     const atendimento = urlParams.get("atendimento");
     const historicoBody = document.getElementById("historicoBody");
+    const filtroMedicamento = document.getElementById("filtroMedicamento");
+    const filtroData = document.getElementById("filtroData");
+    const aplicarFiltros = document.getElementById("aplicarFiltros");
 
-    async function carregarHistorico() {
-      historicoBody.innerHTML = "";
-
-      const snapshot = await get(child(ref(database), `historico/${atendimento}`));
+    // Carrega medicamentos para o filtro
+    async function carregarMedicamentos() {
+      const snapshot = await get(ref(database, `medicamentos/${atendimento}`));
       if (snapshot.exists()) {
-        const dados = snapshot.val();
-        const todosRegistros = Object.values(dados).sort((a, b) => {
-          const dataA = new Date(`${a.data}T${a.horarioReal}`);
-          const dataB = new Date(`${b.data}T${b.horarioReal}`);
-          return dataB - dataA; // ordem decrescente
+        const medicamentos = snapshot.val();
+        Object.values(medicamentos).forEach(med => {
+          const option = document.createElement("option");
+          option.value = med.nome;
+          option.textContent = med.nome;
+          filtroMedicamento.appendChild(option);
         });
-
-        todosRegistros.forEach(item => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${item.medicamento}</td>
-            <td>${item.horarioPrevisto}</td>
-            <td>${item.horarioReal}</td>
-            <td>${item.data}</td>
-          `;
-          historicoBody.appendChild(tr);
-        });
-      } else {
-        historicoBody.innerHTML = `<tr><td colspan="4">Nenhum registro encontrado.</td></tr>`;
       }
     }
 
-    carregarHistorico();
-    window.addEventListener("focus", carregarHistorico);
+    // Carrega histórico com filtros
+    async function carregarHistorico() {
+      historicoBody.innerHTML = "<tr><td colspan='4'>Carregando...</td></tr>";
+
+      const medicamentoFiltro = filtroMedicamento.value;
+      const dataFiltro = filtroData.value;
+
+      const snapshot = await get(ref(database, `historico/${atendimento}`));
+      if (!snapshot.exists()) {
+        historicoBody.innerHTML = "<tr><td colspan='4'>Nenhum registro encontrado.</td></tr>";
+        return;
+      }
+
+      const dados = snapshot.val();
+      let todosRegistros = Object.values(dados);
+
+      // Aplica filtros
+      if (medicamentoFiltro) {
+        todosRegistros = todosRegistros.filter(item => item.medicamento === medicamentoFiltro);
+      }
+      if (dataFiltro) {
+        todosRegistros = todosRegistros.filter(item => item.data === dataFiltro);
+      }
+
+      // Ordena por data/horário (mais recente primeiro)
+      todosRegistros.sort((a, b) => {
+        const dataA = new Date(`${a.data}T${a.horarioReal}`);
+        const dataB = new Date(`${b.data}T${b.horarioReal}`);
+        return dataB - dataA;
+      });
+
+      // Exibe resultados
+      historicoBody.innerHTML = "";
+      if (todosRegistros.length === 0) {
+        historicoBody.innerHTML = "<tr><td colspan='4'>Nenhum registro encontrado com os filtros selecionados.</td></tr>";
+        return;
+      }
+
+      todosRegistros.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.medicamento}</td>
+          <td>${item.horarioPrevisto}</td>
+          <td>${item.horarioReal}</td>
+          <td>${item.data}</td>
+        `;
+        historicoBody.appendChild(tr);
+      });
+    }
+
+    // Eventos
+    aplicarFiltros.addEventListener("click", carregarHistorico);
+    window.addEventListener("load", () => {
+      carregarMedicamentos();
+      carregarHistorico();
+    });
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
