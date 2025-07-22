@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Administração de Procedimentos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background-color: #f0f9ff; font-family: sans-serif; padding: 20px; }
+    header { background-color: #3a8ee6; color: white; padding: 15px; text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; border-radius: 8px; }
+    .btn-primary { background-color: #d9534f; border-color: #d9534f; }
+    .btn-primary:hover { background-color: #c9302c; }
+    .grid-table { margin-top: 20px; background-color: white; border-radius: 8px; overflow: hidden; }
+    th, td { text-align: center; vertical-align: middle; font-size: 0.9rem; padding: 12px 8px; }
+    th { background-color: #3a8ee6; color: white; }
+    .modal-title { font-weight: bold; }
+    .checked { background-color: #d4edda !important; }
+  </style>
+</head>
+<body>
+  <header>Administração de Procedimentos</header>
+
+  <div class="d-flex justify-content-between mb-3">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#procModal">
+      <i class="bi bi-plus-circle"></i> Adicionar Procedimento
+    </button>
+    <button class="btn btn-secondary" id="removerBtn">
+      <i class="bi bi-trash"></i> Remover Procedimento
+    </button>
+  </div>
+
+  <div class="table-responsive grid-table">
+    <table class="table table-bordered" id="procTable">
+      <thead>
+        <tr id="tableHead">
+          <th>Procedimento</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="procModal" tabindex="-1" aria-labelledby="procModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="addProcForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="procModalLabel">Adicionar Procedimento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="nomeProc" class="form-label">Nome do Procedimento</label>
+              <input type="text" class="form-control" id="nomeProc" required>
+            </div>
+            <div class="mb-3">
+              <label for="intervalo" class="form-label">Intervalo de Administração</label>
+              <select class="form-select" id="intervalo" required>
+                <option value="1">1/1 hora (24x dia)</option>
+                <option value="2">2/2 horas (12x dia)</option>
+                <option value="3">3/3 horas (8x dia)</option>
+                <option value="4">4/4 horas (6x dia)</option>
+                <option value="6" selected>6/6 horas (4x dia)</option>
+                <option value="8">8/8 horas (3x dia)</option>
+                <option value="12">12/12 horas (2x dia)</option>
+                <option value="24">24/24 horas (1x dia)</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Procedimento</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="procedimento-script.js"></script>
+</body>
+</html>
